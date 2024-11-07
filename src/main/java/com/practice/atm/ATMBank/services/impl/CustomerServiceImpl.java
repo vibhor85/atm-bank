@@ -7,10 +7,13 @@ import com.practice.atm.ATMBank.repositories.CustomerRepo;
 import com.practice.atm.ATMBank.services.CustomerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
@@ -22,6 +25,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDto createCustomer(CustomerDto customerDto) {
         Customer customer = modelMapper.map(customerDto, Customer.class);
+        customer.setCreated_at(new Date());
+        customer.setUpdated_at(new Date());
         Customer savedCustomer = customerRepo.save(customer);
         return modelMapper.map(savedCustomer, CustomerDto.class);
     }
@@ -32,6 +37,7 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setName(customerDto.getName());
         customer.setEmail(customerDto.getEmail());
         customer.setPassword(customerDto.getPassword());
+        customer.setUpdated_at(new Date());
 
         Customer savedCustomer = customerRepo.save(customer);
         return modelMapper.map(savedCustomer, CustomerDto.class);
