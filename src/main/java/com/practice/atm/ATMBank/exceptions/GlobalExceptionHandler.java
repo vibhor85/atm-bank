@@ -1,5 +1,6 @@
 package com.practice.atm.ATMBank.exceptions;
 
+import com.practice.atm.ATMBank.payloads.APIResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -23,5 +24,14 @@ public class GlobalExceptionHandler {
         });
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<APIResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        String message = ex.getMessage();
+
+        APIResponse apiResponse = new APIResponse(message, false);
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
     }
 }
