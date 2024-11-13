@@ -7,6 +7,7 @@ import com.practice.atm.ATMBank.repositories.CustomerRepo;
 import com.practice.atm.ATMBank.services.CustomerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -22,11 +23,15 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public CustomerDto createCustomer(CustomerDto customerDto) {
         Customer customer = modelMapper.map(customerDto, Customer.class);
         customer.setCreated_at(new Date());
         customer.setUpdated_at(new Date());
+        customer.setPassword(passwordEncoder.encode(customer.getPassword()));
         Customer savedCustomer = customerRepo.save(customer);
         return modelMapper.map(savedCustomer, CustomerDto.class);
     }
